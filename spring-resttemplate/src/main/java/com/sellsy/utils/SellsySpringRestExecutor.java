@@ -3,7 +3,9 @@ package com.sellsy.utils;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.slf4j.Logger;
@@ -13,6 +15,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -47,7 +51,11 @@ public class SellsySpringRestExecutor implements SellsyRequestExecutor {
         
        
         headers.set("Authorization", oauthString());
-        headers.setContentType(MediaType.APPLICATION_JSON);
+//     List<MediaType> medias= new ArrayList<>(2);
+//     medias.add(MediaType.APPLICATION_JSON);
+//     medias.add(MediaType.parseMediaType("text/html"));
+//       headers.setAccept(medias);
+        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
     }
     
     
@@ -57,19 +65,26 @@ public class SellsySpringRestExecutor implements SellsyRequestExecutor {
     /* (non-Javadoc)
      * @see com.sellsy.utils.SellsyRequestExecutor#submit(java.lang.String, java.lang.String)
      */
+    @SuppressWarnings("rawtypes")
     @Override
     public String submit(String method, String params) {
         
-        Sellsyreq request = new Sellsyreq(new SellsyApiCall(method, params));
-        logger.debug("Submitting request {}", request.toString());
+        MultiValueMap<String, Object> sellssyCall = new LinkedMultiValueMap<>();
+       sellssyCall.add("request", 1);
+       sellssyCall.add("io_mode", "json");
+       try {
+        sellssyCall.add("do_in",OBJECTMAPPER.writeValueAsString(new SellsyApiCall(method, params)));
+    } catch (JsonProcessingException e1) {
+        // TODO Auto-generated catch block
+        e1.printStackTrace();
+    }
+        
+      
+        logger.debug("Submitting form value map {}", sellssyCall.toString());
         logger.debug("Headers : {}", headers.toString());
-        HttpEntity<String> entity;
-        try {
-            entity = new HttpEntity<String>(OBJECTMAPPER.writeValueAsString(request), this.headers);
-        } catch (JsonProcessingException e) {
-            logger.error("raised exception converting sellsyreq {}", e.toString());
-            entity = new HttpEntity<String>("", this.headers);
-        }
+        HttpEntity<MultiValueMap> entity = new HttpEntity<MultiValueMap>(sellssyCall, this.headers);
+       
+ 
         ResponseEntity<String> result = restTemplate.exchange(APIURI, HttpMethod.POST, entity, String.class);
         logger.debug("Result headers : {}", result.getHeaders().toString());
      
