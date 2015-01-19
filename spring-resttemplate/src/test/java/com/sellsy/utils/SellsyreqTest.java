@@ -1,18 +1,5 @@
 package com.sellsy.utils;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.Scanner;
-
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.utils.URIBuilder;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,47 +8,18 @@ public class SellsyreqTest {
 
     private static final Logger logger = LoggerFactory.getLogger(SellsyreqTest.class);
 
-    /**
-     * Initial playground test.
-     * kept for reference
-     * @throws URISyntaxException
-     * @throws IOException
-     */
-    @Ignore
+    // Keys
+    private static String consumerToken="2b0ad3000cac95ca2a73b81b4adabe72d0b94e57";
+    private static String consumerSecret="181a01c3eac529008d9507b968c3b5a80ee4f5e7";
+    private static String userToken="816deb4e9946d421ed8b3b50230503ba0baa6cdf";
+    private static String userSecret="00d75564839d21dee76fcc9b32948dd5012a3078";
+    private static SellsySpringRestExecutor underTest = new SellsySpringRestExecutor(consumerToken, consumerSecret, userToken, userSecret);
+    
     @Test
-    public void test() throws URISyntaxException, IOException {
-
-        URI uri = new URIBuilder().setScheme("https").setHost("apifeed.sellsy.com").setPath("/0/").build();
-
-        CloseableHttpClient httpclient = HttpClients.createDefault();
-        HttpGet httpget = new HttpGet(uri);
-        logger.debug("Performing get on {}", httpget.getURI().toString());
-        CloseableHttpResponse response = null;
-        try {
-            response = httpclient.execute(httpget);
-
-            logger.debug("Response status {}", response.getStatusLine().toString());
-            logger.debug("Response {}", response.toString());
-            logger.debug("{}", response.getEntity().getContentType().toString());
-            InputStream is = response.getEntity().getContent();
-            Scanner scan = new Scanner(is);
-            while (scan.hasNext())
-                logger.debug("{}", scan.nextLine());
-            scan.close();
-
-        } catch (IOException e) {
-            logger.error("Exception raisded {}", e.toString());
-        } finally {
-            response.close();
-        }
-
-//        fail("Not yet implemented");
+    public void test() {
+        String result = underTest.submit("Peoples.getList", 
+               "{pagination:{nberpage:10, pagenum:1},search:{contains:33184164473}");
+        logger.info("Retour : {}", result);
     }
-    @Test
-    public void test2() throws ClientProtocolException, IOException {
-        Sellsyreq underTest = new Sellsyreq("bidon");
-        logger.debug(String.format("Resultat : %s", underTest.execute()));
-   
-    }
-
+    
 }

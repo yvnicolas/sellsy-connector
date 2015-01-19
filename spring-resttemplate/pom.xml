@@ -1,8 +1,8 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.yves.http</groupId>
-	<artifactId>selssyprep</artifactId>
+	<groupId>com.dynamease</groupId>
+	<artifactId>spring-resttemplate-sellsy</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 
 	<properties>
@@ -51,6 +51,21 @@
 			<scope>compile</scope>
 		</dependency>
 
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-annotations</artifactId>
+			<version>${com.fasterxml.jackson-version}</version>
+			<scope>compile</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>${com.fasterxml.jackson-version}</version>
+			<scope>compile</scope>
+		</dependency>
+
+
 		<!-- SPRING GENERAL -->
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -77,8 +92,22 @@
 			<version>${org.springframework-version}</version>
 		</dependency>
 
+
+		<!-- Apache codecs for md5 -->
+
+		<dependency>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+			<version>1.9</version>
+		</dependency>
+
+		<!-- <dependency> -->
+		<!-- <groupId>org.apache.lucene</groupId> -->
+		<!-- <artifactId>lucene-codecs</artifactId> -->
+		<!-- <version>4.10.3</version> -->
+		<!-- </dependency> -->
 	</dependencies>
-<build>
+	<build>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
