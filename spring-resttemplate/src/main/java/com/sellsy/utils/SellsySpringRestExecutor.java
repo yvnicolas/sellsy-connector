@@ -67,7 +67,7 @@ public class SellsySpringRestExecutor implements SellsyRequestExecutor {
      */
     @SuppressWarnings("rawtypes")
     @Override
-    public String submit(String method, String params) {
+    public String submit(String method, Object params) {
         
         MultiValueMap<String, Object> sellssyCall = new LinkedMultiValueMap<>();
        sellssyCall.add("request", 1);

@@ -1,67 +1,28 @@
 package com.sellsy.utils;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.Scanner;
 
 import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.utils.URIBuilder;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.sellsy.entity.ListGetParams;
+import com.sellsy.entity.Pagination;
+import com.sellsy.entity.SearchFilter;
+
 public class SellsyreqTest {
 
     private static final Logger logger = LoggerFactory.getLogger(SellsyreqTest.class);
+    
+    private static final SellsyExecutor underTest = new SellsyExecutor();
 
-    /**
-     * Initial playground test.
-     * kept for reference
-     * @throws URISyntaxException
-     * @throws IOException
-     */
-    @Ignore
     @Test
-    public void test() throws URISyntaxException, IOException {
-
-        URI uri = new URIBuilder().setScheme("https").setHost("apifeed.sellsy.com").setPath("/0/").build();
-
-        CloseableHttpClient httpclient = HttpClients.createDefault();
-        HttpGet httpget = new HttpGet(uri);
-        logger.debug("Performing get on {}", httpget.getURI().toString());
-        CloseableHttpResponse response = null;
-        try {
-            response = httpclient.execute(httpget);
-
-            logger.debug("Response status {}", response.getStatusLine().toString());
-            logger.debug("Response {}", response.toString());
-            logger.debug("{}", response.getEntity().getContentType().toString());
-            InputStream is = response.getEntity().getContent();
-            Scanner scan = new Scanner(is);
-            while (scan.hasNext())
-                logger.debug("{}", scan.nextLine());
-            scan.close();
-
-        } catch (IOException e) {
-            logger.error("Exception raisded {}", e.toString());
-        } finally {
-            response.close();
-        }
-
-//        fail("Not yet implemented");
+    public void test() throws ClientProtocolException, IOException {    
+        ListGetParams params = new ListGetParams();
+        params.setPagination(new Pagination(10, 1));
+        params.setSearch(new SearchFilter("610278087"));
+        String result = underTest.submit("Peoples.getList", null);
+        logger.info("Retour : {}", result);
     }
-    @Test
-    public void test2() throws ClientProtocolException, IOException {
-        Sellsyreq underTest = new Sellsyreq("bidon");
-        logger.debug(String.format("Resultat : %s", underTest.execute()));
-   
-    }
-
 }

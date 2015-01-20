@@ -4,9 +4,17 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sellsy.entity.ListGetParams;
+import com.sellsy.entity.Pagination;
+import com.sellsy.entity.SearchFilter;
+
 public class SellsyreqTest {
 
     private static final Logger logger = LoggerFactory.getLogger(SellsyreqTest.class);
+    
+    private static final ObjectMapper OBJECTMAPPER = new ObjectMapper();
 
     // Keys
     private static String consumerToken="2b0ad3000cac95ca2a73b81b4adabe72d0b94e57";
@@ -16,9 +24,11 @@ public class SellsyreqTest {
     private static SellsySpringRestExecutor underTest = new SellsySpringRestExecutor(consumerToken, consumerSecret, userToken, userSecret);
     
     @Test
-    public void test() {
-        String result = underTest.submit("Peoples.getList", 
-               "{pagination:{nberpage:10, pagenum:1},search:{contains:33184164473}");
+    public void test() throws JsonProcessingException {    
+        ListGetParams params = new ListGetParams();
+        params.setPagination(new Pagination(10, 1));
+        params.setSearch(new SearchFilter("610278087"));
+        String result = underTest.submit("Peoples.getList", null);
         logger.info("Retour : {}", result);
     }
     
