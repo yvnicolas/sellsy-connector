@@ -1,4 +1,4 @@
-package com.sellsy.utils;
+package com.sellsy.apiservices;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -21,6 +21,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sellsy.apientities.SellsyApiCall;
 
 public class SellsySpringRestExecutor implements SellsyRequestExecutor {
 

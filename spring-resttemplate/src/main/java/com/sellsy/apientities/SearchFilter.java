@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.sellsy.entity;
+package com.sellsy.apientities;
 
 /**
  * @author yves

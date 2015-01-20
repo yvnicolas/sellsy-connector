@@ -5,17 +5,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sellsy.entity.ListGetParams;
-import com.sellsy.entity.Pagination;
-import com.sellsy.entity.SearchFilter;
+import com.sellsy.apientities.ListGetParams;
+import com.sellsy.apientities.Pagination;
+import com.sellsy.apientities.SearchFilter;
+import com.sellsy.apiservices.SellsySpringRestExecutor;
 
 public class SellsyreqTest {
 
     private static final Logger logger = LoggerFactory.getLogger(SellsyreqTest.class);
     
-    private static final ObjectMapper OBJECTMAPPER = new ObjectMapper();
-
+    
     // Keys
     private static String consumerToken="2b0ad3000cac95ca2a73b81b4adabe72d0b94e57";
     private static String consumerSecret="181a01c3eac529008d9507b968c3b5a80ee4f5e7";

@@ -1,4 +1,4 @@
-package com.sellsy.utils;
+package com.sellsy.apientities;
 
 
 /**
