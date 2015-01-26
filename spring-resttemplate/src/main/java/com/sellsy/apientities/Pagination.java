@@ -37,6 +37,12 @@ public class Pagination {
     public void setPagenum(int pagenum) {
         this.pagenum = pagenum;
     }
+
+
+    @Override
+    public String toString() {
+        return "Pagination [nberpage=" + nberpage + ", pagenum=" + pagenum + "]";
+    }
     
     
 

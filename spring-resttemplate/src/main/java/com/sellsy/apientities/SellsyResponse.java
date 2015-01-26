@@ -11,20 +11,22 @@ package com.sellsy.apientities;
  */
 public class SellsyResponse {
 
-    private Object response;
+    private String response;
     private String error;
     private String status;
     
     public SellsyResponse() {
        
     }
-
-    public Object getResponse() {
+ 
+   
+    public String getJsonResponse() {
         return response;
     }
 
-    public void setResponse(Object response) {
-        this.response = response;
+
+    public void setJsonResponse(String jsonResponse) {
+        this.response = jsonResponse;
     }
 
     public String getError() {
