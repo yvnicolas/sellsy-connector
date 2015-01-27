@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.dynamease</groupId>
 	<artifactId>spring-resttemplate-sellsy</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.1.0-RELEASE</version>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
