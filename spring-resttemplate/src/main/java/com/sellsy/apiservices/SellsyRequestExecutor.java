@@ -1,5 +1,7 @@
 package com.sellsy.apiservices;
 
+import java.util.Map;
+
 import com.sellsy.apientities.SellsyAPIMethod;
 
 public interface SellsyRequestExecutor {
@@ -9,8 +11,12 @@ public interface SellsyRequestExecutor {
      * @param params
      * @return
      */
-    public abstract String submit(String method, Object params);
+    public abstract String stringSubmit(String method, Object params);
     
-    public abstract Object submit (SellsyAPIMethod method, Object params) throws SellsyApiException;
+    // Following method are work in progress used mainly for tests
+    
+    public abstract Object typedSubmit (SellsyAPIMethod method, Object params) throws SellsyApiException;
+    
+    public abstract Map<String, Object> mapSubmit (String method, Map<String, Object> params) throws SellsyApiException;
 
 }

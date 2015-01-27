@@ -60,7 +60,7 @@ public class SellsySpringRestExecutor implements SellsyRequestExecutor {
      */
     @SuppressWarnings("rawtypes")
     @Override
-    public String submit(String method, Object params) {
+    public String stringSubmit(String method, Object params) {
 
         MultiValueMap<String, Object> sellssyCall = new LinkedMultiValueMap<>();
         sellssyCall.add("request", 1);
@@ -114,10 +114,10 @@ public class SellsySpringRestExecutor implements SellsyRequestExecutor {
    
     @SuppressWarnings("unchecked")
     @Override
-    public Object submit(SellsyAPIMethod method, Object params) throws SellsyApiException {
+    public Object typedSubmit(SellsyAPIMethod method, Object params) throws SellsyApiException {
 
         // Sellsy Api Call
-        String responseAsString = submit(method.getName(), params);
+        String responseAsString = stringSubmit(method.getName(), params);
         Map<String, Object> rawResponse = null;
         
         // Process error cases
@@ -126,7 +126,38 @@ public class SellsySpringRestExecutor implements SellsyRequestExecutor {
             if (!rawResponse.get("status").equals(SUCCESS))
                 throw new SellsyApiException("Call to " + method.getName() + " : " + rawResponse.get("error"));
             else {
-                return OBJECTMAPPER.convertValue(rawResponse.get("response"), method.getResponseClass());
+                Object mapResponse = rawResponse.get("response");
+                if (mapResponse!=null)
+                 return OBJECTMAPPER.convertValue(rawResponse.get("response"), method.getResponseClass());
+                else return null;
+                
+            }
+            
+            
+            
+        } catch (IOException e) {
+            String errorMsg = "Exception " + e.toString() + " raised decoding Sellsy Api rawResponse" + responseAsString;
+            logger.error(errorMsg);
+            throw new SellsyApiException(errorMsg, e);
+        }
+        
+       
+    
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public Map<String, Object> mapSubmit(String method, Map<String, Object> params) throws SellsyApiException {
+        String responseAsString = stringSubmit (method, params);
+        Map<String, Object> rawResponse = null;
+        
+        // Process error cases
+        try {
+            rawResponse = (Map<String, Object>) OBJECTMAPPER.readValue(responseAsString ,Object.class);
+            if (!rawResponse.get("status").equals(SUCCESS))
+                throw new SellsyApiException("Call to " + method + " : " + rawResponse.get("error"));
+            else {
+                return (Map<String, Object>) rawResponse.get("response");
                 
             }
             

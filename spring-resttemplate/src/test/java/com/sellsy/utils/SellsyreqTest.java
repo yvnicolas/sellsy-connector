@@ -34,7 +34,7 @@ public class SellsyreqTest {
         ListGetParams params = new ListGetParams();
         params.setPagination(new Pagination(10, 1));
         params.setSearch(new SearchFilter("610278087"));
-        String result = underTest.submit("Peoples.getList", params);
+        String result = underTest.stringSubmit("Peoples.getList", params);
         logger.info("Retour : {}", result);
     }
     
@@ -46,7 +46,7 @@ public class SellsyreqTest {
   
     SellsyAPIMethod method = new SellsyAPIMethod("Peoples.getList", String.class);
     try {
-        underTest.submit(method, null);
+        underTest.typedSubmit(method, null);
         fail ("should raise Exception");
     } catch (SellsyApiException e) {
         logger.debug("raised exception {}", e.toString());
@@ -65,7 +65,7 @@ public class SellsyreqTest {
         ListGetParams params = new ListGetParams();
         params.setPagination(new Pagination(10, 1));
         params.setSearch(new SearchFilter("49 03 21 05"));
-        SellsyPeopleResponseList result = (SellsyPeopleResponseList) underTest.submit(method, params);
+        SellsyPeopleResponseList result = (SellsyPeopleResponseList) underTest.typedSubmit(method, params);
         logger.debug("Result info : {}", result.getInfos().toString());
         logger.debug("Real result : {}", result.getResult().toString());
         assertEquals(1, result.getInfos().getNbtotal());
@@ -79,7 +79,7 @@ public class SellsyreqTest {
         ListGetParams params = new ListGetParams();
         params.setPagination(new Pagination(10, 1));
         params.setSearch(new SearchFilter("490321"));
-        SellsyPeopleResponseList result = (SellsyPeopleResponseList) underTest.submit(method, params);
+        SellsyPeopleResponseList result = (SellsyPeopleResponseList) underTest.typedSubmit(method, params);
         logger.debug("Result info : {}", result.getInfos().toString());
         logger.debug("Real result : {}", result.getResult().toString());
         assertEquals(0, result.getInfos().getNbtotal());
