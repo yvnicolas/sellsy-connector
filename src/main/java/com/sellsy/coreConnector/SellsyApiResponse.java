@@ -4,6 +4,7 @@
 package com.sellsy.coreConnector;
 
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Encapsulates the raw Map response result from the Json Call
@@ -28,6 +29,10 @@ public class SellsyApiResponse  {
 
     public Object getResponseAttribute(String attribute) {
         return attributeMap.get(attribute);
+    }
+    
+    public Set<String> getAttributesList() {
+        return attributeMap.keySet();
     }
 
     @Override
