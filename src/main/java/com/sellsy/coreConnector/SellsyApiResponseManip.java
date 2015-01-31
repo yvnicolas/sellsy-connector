@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
  * A collection of static method to manipulate Sellsy ApiResponse. To be enhanced
  * 
  * @author yves
- *
+ * 
  */
 public class SellsyApiResponseManip {
 
@@ -60,21 +60,41 @@ public class SellsyApiResponseManip {
 
         Object toReturn = null;
 
+//        if (logger.isDebugEnabled())
+//            logTypeMethods(type);
+
         try {
             toReturn = type.newInstance();
             for (String attribute : response.getAttributesList()) {
-                if (response.getResponseAttribute(attribute).getClass().equals(String.class)) {
-                    Method setter = retrieveSetter(attribute, type);
-                    Object[] args = new Object[0];
+
+                Method setter = retrieveSetter(attribute, type);
+                if (setter != null) {
+                    Object[] args = new Object[1];
                     args[0] = response.getResponseAttribute(attribute);
                     setter.invoke(toReturn, args);
                 }
+
             }
         } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-           logger.error("unable to convert {} to type {} : {}", response, type.getName(), e.toString());
+            logger.error("unable to convert {} to type {} : {}", response, type.getName(), e.toString());
         }
 
         return toReturn;
+
+    }
+
+    @SuppressWarnings("unused")
+    private static void logTypeMethods(Class<? extends Object> type) {
+        logger.debug(String.format("Asking sellsy response conversion to type %s", type.getName()));
+        for (Method method : type.getMethods()) {
+            logger.debug(String.format("  Method %s", method.getName()));
+            int i = 0;
+            for (Class<?> classe : method.getParameterTypes()) {
+                i++;
+                logger.debug(String.format("     type arg %s  : %s", i, classe.getName()));
+            }
+            ;
+        }
 
     }
 
