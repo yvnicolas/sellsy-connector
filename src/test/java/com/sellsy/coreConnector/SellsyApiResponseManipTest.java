@@ -31,6 +31,13 @@ public class SellsyApiResponseManipTest {
         List<SellsyApiResponse> responseList = SellsyApiResponseManip.extractResponseList(inputRepsonse);
         assertEquals(1, responseList.size());
     }
+    
+    @Test
+    public void testExtractVoidResponseList() throws JsonParseException, JsonMappingException, IOException, SellsyApiException {
+        SellsyApiResponse inputRepsonse = responseFromFile("peopleListVoid.json");
+        List<SellsyApiResponse> responseList = SellsyApiResponseManip.extractResponseList(inputRepsonse);
+        assertEquals(0, responseList.size());
+    }
 
     @Test
     public void testConvert() throws SellsyApiException, JsonParseException, JsonMappingException, IOException {

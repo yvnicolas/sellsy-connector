@@ -92,7 +92,7 @@
 			<version>${org.springframework-version}</version>
 		</dependency>
 
-	
+
 
 
 		<!-- Apache codecs for md5 -->
@@ -146,6 +146,14 @@
 					<downloadSources>true</downloadSources>
 					<downloadJavadocs>true</downloadJavadocs>
 				</configuration>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>

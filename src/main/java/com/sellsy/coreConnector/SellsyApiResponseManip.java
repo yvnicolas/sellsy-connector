@@ -6,6 +6,7 @@ package com.sellsy.coreConnector;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -37,12 +38,18 @@ public class SellsyApiResponseManip {
             throw new SellsyApiException("Response is not a list : " + response.toString());
         else {
             List<SellsyApiResponse> toReturn = new ArrayList<>();
-            Map<String, Object> responseList = (Map<String, Object>) response.getResponseAttribute("result");
-            if (responseList != null) {
+
+            try {
+                Map<String, Object> responseList = (Map<String, Object>) response.getResponseAttribute("result");
+
                 for (String id : responseList.keySet()) {
                     toReturn.add(new SellsyApiResponse((Map<String, Object>) responseList.get(id)));
                 }
+                
+                // ClassCast Exception is raised if result is void
+            } catch (ClassCastException e) {
             }
+
             return toReturn;
         }
     }
@@ -60,8 +67,8 @@ public class SellsyApiResponseManip {
 
         Object toReturn = null;
 
-//        if (logger.isDebugEnabled())
-//            logTypeMethods(type);
+        // if (logger.isDebugEnabled())
+        // logTypeMethods(type);
 
         try {
             toReturn = type.newInstance();
