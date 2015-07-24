@@ -30,7 +30,7 @@ public class SellsyApiResponseManip {
      * @param response
      * @return
      */
-    @SuppressWarnings("unchecked")
+//    @SuppressWarnings("unchecked")
     public static List<SellsyApiResponse> extractResponseList(SellsyApiResponse response) throws SellsyApiException {
 
         Map<String, Object> infos = (Map<String, Object>) response.getResponseAttribute("infos");

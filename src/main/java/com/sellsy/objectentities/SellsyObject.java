@@ -3,6 +3,8 @@
  */
 package com.sellsy.objectentities;
 
+import com.sellsy.coreConnector.SellsyApiResponse;
+
 /**
  * Top level class for Sellsy database entities
  * @author Yves Nicolas
@@ -12,6 +14,9 @@ public class SellsyObject {
 
     private String id;
     private String ownerid;
+    
+    // the full Sellsy map object representation as returned by Selssy API
+    private SellsyApiResponse apiResponse;
     
 
     public SellsyObject() {
@@ -35,6 +40,17 @@ public class SellsyObject {
 
     public void setOwnerid(String ownerid) {
         this.ownerid = ownerid;
+    }
+
+    
+
+    public SellsyApiResponse getApiResponse() {
+        return apiResponse;
+    }
+
+
+    public void setApiResponse(SellsyApiResponse apiResponse) {
+        this.apiResponse = apiResponse;
     }
 
 

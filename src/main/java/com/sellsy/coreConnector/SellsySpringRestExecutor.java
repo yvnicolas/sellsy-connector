@@ -20,7 +20,9 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.MapType;
 
 /**
  * Implements an Sellsy Api call request executor for a private application
@@ -91,7 +93,9 @@ public class SellsySpringRestExecutor implements SellsyRequestExecutor {
         return sb.toString();
     }
 
-    @SuppressWarnings("unchecked")
+    final MapType type = OBJECTMAPPER.getTypeFactory().constructMapType(
+            Map.class, String.class, Object.class);
+//    @SuppressWarnings("unchecked")
     @Override
     public SellsyApiResponse process(SellsyApiRequest request) throws SellsyApiException {
 
@@ -118,8 +122,8 @@ public class SellsySpringRestExecutor implements SellsyRequestExecutor {
             // Process the answer
             try {
 
-                Map<String, Object> rawResponse = (Map<String, Object>) OBJECTMAPPER.readValue(result.getBody(),
-                        Map.class);
+                Map<String, Object> rawResponse =  OBJECTMAPPER.readValue(result.getBody(),
+                        type);
 
                 if (!rawResponse.get("status").equals(SUCCESS))
                     throw new SellsyApiException("Call to " + request.getMethod() + " : " + rawResponse.get("error"));

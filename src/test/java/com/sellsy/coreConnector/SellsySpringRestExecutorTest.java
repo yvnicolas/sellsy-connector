@@ -33,11 +33,11 @@ public class SellsySpringRestExecutorTest {
     private static final Logger logger = LoggerFactory.getLogger(SellsySpringRestExecutorTest.class);
 
     // Keys Make sure you change them to have valid keys
-    private static String consumerToken = "2b0ad3000cac95ca2a73b81b4adabe72d0b94e57";
-    private static String consumerSecret = "181a01c3eac529008d9507b968c3b5a80ee4f5e7";
-    private static String userToken = "816deb4e9946d421ed8b3b50230503ba0baa6cdf";
-    private static String userSecret = "00d75564839d21dee76fcc9b32948dd5012a3078";
-
+    private static String consumerToken = "2d4682106050873fe60fca4e2a182d8b889a67af";
+    private static String consumerSecret = "27060a3a99df8087f10b52753a74bca4a6168f93";
+    private static String userToken = "7f5b728c05460e91051ca4dcadc14c51983f8954";
+    private static String userSecret = "64663c0482babc51dfe3b3fe0d4065fd9b3c040f";
+  
     private static SellsySpringRestExecutor underTest = new SellsySpringRestExecutor(consumerToken, consumerSecret,
             userToken, userSecret);
 
@@ -120,6 +120,7 @@ public class SellsySpringRestExecutorTest {
     public void testList() throws SellsyApiException {
         ListGetParams params = new ListGetParams();
         params.setPagination(new Pagination(10, 1));
+        params.setSearch(new SearchFilter("4921 05"));
         SellsyApiRequest request = new SellsyApiRequest("Peoples.getList", params);
         SellsyApiResponse result = underTest.process(request);
 
@@ -134,4 +135,29 @@ public class SellsySpringRestExecutorTest {
         }
     }
 
+    
+
+    @Test
+    public void testPoc() throws SellsyApiException {
+        ListGetParams params = new ListGetParams();
+        params.setPagination(new Pagination(10, 1));
+        params.setSearch(new SearchFilter("0698017310"));
+        SellsyApiRequest request = new SellsyApiRequest("Peoples.getList", params);
+        SellsyApiResponse result = underTest.process(request);
+
+        List<SellsyApiResponse> listContacts = SellsyApiResponseManip.extractResponseList(result);
+        logger.debug(String.format("Found %s results", listContacts.size()));
+        int i = 0;
+        for (SellsyApiResponse contact : listContacts) {
+            i++;
+            logger.debug(String.format("contact %s : %s %s", i, contact.getResponseAttribute("forename"),
+                    contact.getResponseAttribute("name")));
+            logger.debug("{}", contact.toString());
+            Object linked = contact.getResponseAttribute("linked");
+            logger.debug("Linked Attribute, TYpe : {}, value : {}", linked.getClass(), linked.toString());
+            Object linkedRelationtypes = contact.getResponseAttribute("linkedRelationTypes");
+            logger.debug("linkedRelationtypes Attribute, TYpe : {}, value : {}", linkedRelationtypes.getClass(), linkedRelationtypes.toString());
+            
+        }
+    }
 }
