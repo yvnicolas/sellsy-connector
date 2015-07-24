@@ -21,8 +21,16 @@ public class SellsyObject {
 
     public SellsyObject() {
     }
-
+    
   
+  
+    public SellsyObject(SellsyApiResponse apiResponse) {
+        this.apiResponse = apiResponse;
+        //TODO : rajouter le owner ID et le id par utilisation de la reponse
+    }
+
+
+
     public String getId() {
         return id;
     }

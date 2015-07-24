@@ -13,6 +13,8 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
 /**
  * 
  * A collection of static method to manipulate Sellsy ApiResponse. To be enhanced
@@ -30,30 +32,8 @@ public class SellsyApiResponseManip {
      * @param response
      * @return
      */
-//    @SuppressWarnings("unchecked")
-    public static List<SellsyApiResponse> extractResponseList(SellsyApiResponse response) throws SellsyApiException {
-
-        Map<String, Object> infos = (Map<String, Object>) response.getResponseAttribute("infos");
-        if (infos == null)
-            throw new SellsyApiException("Response is not a list : " + response.toString());
-        else {
-            List<SellsyApiResponse> toReturn = new ArrayList<>();
-
-            try {
-                Map<String, Object> responseList = (Map<String, Object>) response.getResponseAttribute("result");
-
-                for (String id : responseList.keySet()) {
-                    toReturn.add(new SellsyApiResponse((Map<String, Object>) responseList.get(id)));
-                }
-                
-                // ClassCast Exception is raised if result is void
-            } catch (ClassCastException e) {
-            }
-
-            return toReturn;
-        }
-    }
-
+    // @SuppressWarnings("unchecked")
+  
     /**
      * Flat converts info found in the response to return a new object of class type Returned object
      * will get response content as follows : response must have a string attribute attr for which

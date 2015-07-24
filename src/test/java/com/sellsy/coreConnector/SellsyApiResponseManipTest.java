@@ -16,6 +16,7 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.MapType;
 import com.sellsy.objectentities.SellsyObject;
 import com.sellsy.objectentities.SellsyPeople;
 
@@ -24,6 +25,9 @@ public class SellsyApiResponseManipTest {
     private static final Logger logger = LoggerFactory.getLogger(SellsyApiResponseManipTest.class);
     
     private static final ObjectMapper OBJECTMAPPER = new ObjectMapper();
+    private static  final MapType GENERICMAPTYPE = OBJECTMAPPER.getTypeFactory().constructMapType(
+            Map.class, String.class, Object.class);
+
 
     @Test
     public void testExtractResponseList() throws JsonParseException, JsonMappingException, IOException, SellsyApiException {
@@ -66,7 +70,7 @@ public class SellsyApiResponseManipTest {
             }
             
             
-            Map<String,Object>  responseAsMap = OBJECTMAPPER.readValue(jsonInput, new TypeReference<Map<String,Object>>() {});
+            Map<String,Object>  responseAsMap = OBJECTMAPPER.readValue(jsonInput, GENERICMAPTYPE);
             return new SellsyApiResponse(responseAsMap);
  
     }

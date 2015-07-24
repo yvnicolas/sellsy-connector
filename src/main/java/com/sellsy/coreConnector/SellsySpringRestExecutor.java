@@ -37,6 +37,8 @@ public class SellsySpringRestExecutor implements SellsyRequestExecutor {
     private static final String APIURI = "https://apifeed.sellsy.com/0/";
 
     private static final ObjectMapper OBJECTMAPPER = new ObjectMapper();
+    private static  final MapType GENERICMAPTYPE = OBJECTMAPPER.getTypeFactory().constructMapType(
+            Map.class, String.class, Object.class);
 
     // String constants used in Sellsy API Calls
     private static final String SUCCESS = "success";
@@ -93,8 +95,7 @@ public class SellsySpringRestExecutor implements SellsyRequestExecutor {
         return sb.toString();
     }
 
-    final MapType type = OBJECTMAPPER.getTypeFactory().constructMapType(
-            Map.class, String.class, Object.class);
+   
 //    @SuppressWarnings("unchecked")
     @Override
     public SellsyApiResponse process(SellsyApiRequest request) throws SellsyApiException {
@@ -122,13 +123,13 @@ public class SellsySpringRestExecutor implements SellsyRequestExecutor {
             // Process the answer
             try {
 
-                Map<String, Object> rawResponse =  OBJECTMAPPER.readValue(result.getBody(),
-                        type);
+                Map<String, Object> rawResponse =  OBJECTMAPPER.readtrreadValue(result.getBody(),GENERICMAPTYPE);
 
                 if (!rawResponse.get("status").equals(SUCCESS))
                     throw new SellsyApiException("Call to " + request.getMethod() + " : " + rawResponse.get("error"));
                 else {
-                    return new SellsyApiResponse((Map<String, Object>) rawResponse.get(RESPONSE));
+                    rawResponse.get(RESPONSE).getClass().in
+                    return new SellsyApiResponse(OBJECTMAPPER.readValues( rawResponse.get(RESPONSE), GENERICMAPTYPE);
 
                 }
 
