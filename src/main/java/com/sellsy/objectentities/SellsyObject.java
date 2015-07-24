@@ -3,6 +3,7 @@
  */
 package com.sellsy.objectentities;
 
+import com.sellsy.coreConnector.SellsyAPIConstants;
 import com.sellsy.coreConnector.SellsyApiResponse;
 
 /**
@@ -15,7 +16,7 @@ public class SellsyObject {
     private String id;
     private String ownerid;
     
-    // the full Sellsy map object representation as returned by Selssy API
+    // the full Sellsy Json tree object representation as returned by Selssy API
     private SellsyApiResponse apiResponse;
     
 
@@ -26,7 +27,8 @@ public class SellsyObject {
   
     public SellsyObject(SellsyApiResponse apiResponse) {
         this.apiResponse = apiResponse;
-        //TODO : rajouter le owner ID et le id par utilisation de la reponse
+        this.id=apiResponse.getResponseAttribute(SellsyAPIConstants.ID);
+        this.ownerid=apiResponse.getResponseAttribute(SellsyAPIConstants.OWNERID);
     }
 
 
@@ -51,20 +53,20 @@ public class SellsyObject {
     }
 
     
-
-    public SellsyApiResponse getApiResponse() {
-        return apiResponse;
+    
+    /**
+     * Enables to get value for whole inside attribute inside the tree of the response.
+     * Syntax of attribute should use dot "." to go todeeperlevel. Example ("avatar.type")
+     * @param attribute
+     * @return
+     */
+    public String getAttributeValue(String attribute) {
+    return this.apiResponse.getResponseAttribute(attribute);
     }
-
-
-    public void setApiResponse(SellsyApiResponse apiResponse) {
-        this.apiResponse = apiResponse;
-    }
-
 
     @Override
     public String toString() {
-        return "SellsyObject [id=" + id + ", ownerid=" + ownerid + "]";
+        return "SellsyObject [id=" + id + ", ownerid=" + ownerid + ", fullTree =" + apiResponse + "]";
     }
     
 }

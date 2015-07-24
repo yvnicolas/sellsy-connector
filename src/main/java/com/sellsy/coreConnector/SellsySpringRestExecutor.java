@@ -1,10 +1,8 @@
 package com.sellsy.coreConnector;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Date;
-import java.util.Map;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.slf4j.Logger;
@@ -14,15 +12,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.type.MapType;
 
 /**
  * Implements an Sellsy Api call request executor for a private application
@@ -35,10 +26,11 @@ public class SellsySpringRestExecutor implements SellsyRequestExecutor {
     private static final Logger logger = LoggerFactory.getLogger(SellsySpringRestExecutor.class);
 
     private static final String APIURI = "https://apifeed.sellsy.com/0/";
+    private static final String REQUESTSTART = "request=1&io_mode=json&do_in=";
 
-    private static final ObjectMapper OBJECTMAPPER = new ObjectMapper();
-    private static  final MapType GENERICMAPTYPE = OBJECTMAPPER.getTypeFactory().constructMapType(
-            Map.class, String.class, Object.class);
+    // private static final ObjectMapper OBJECTMAPPER = new ObjectMapper();
+    // private static final MapType GENERICMAPTYPE = OBJECTMAPPER.getTypeFactory().constructMapType(
+    // Map.class, String.class, Object.class);
 
     // String constants used in Sellsy API Calls
     private static final String SUCCESS = "success";
@@ -61,7 +53,7 @@ public class SellsySpringRestExecutor implements SellsyRequestExecutor {
         this.userSecret = userSecret;
 
         headers.set("Authorization", oauthString());
-        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
     }
 
     /**
@@ -95,50 +87,37 @@ public class SellsySpringRestExecutor implements SellsyRequestExecutor {
         return sb.toString();
     }
 
-   
-//    @SuppressWarnings("unchecked")
+    // @SuppressWarnings("unchecked")
     @Override
     public SellsyApiResponse process(SellsyApiRequest request) throws SellsyApiException {
 
-        // Building the request
-        MultiValueMap<String, Object> sellssyCall = new LinkedMultiValueMap<>();
-        sellssyCall.add("request", 1);
-        sellssyCall.add("io_mode", "json");
-        try {
-            sellssyCall.add("do_in", OBJECTMAPPER.writeValueAsString(request));
-        } catch (JsonProcessingException e) {
-            throw new SellsyApiException(String.format("Sellsy Api request building : %s", e.toString()), e);
-        }
+        // // Building the request
+        // MultiValueMap<String, Object> sellssyCall = new LinkedMultiValueMap<>();
+        // sellssyCall.add("request", 1);
+        // sellssyCall.add("io_mode", "json");
+        // try {
+        // sellssyCall.add("do_in", OBJECTMAPPER.writeValueAsString(request));
+        // } catch (JsonProcessingException e) {
+        // throw new SellsyApiException(String.format("Sellsy Api request building : %s",
+        // e.toString()), e);
+        // }
 
         // Actual API Call to Selssy
-        logger.debug("Submitting form value map {}", sellssyCall.toString());
+        String httpRequestAsString = REQUESTSTART + request.json();
+        logger.debug("Submitting request {}", httpRequestAsString);
         logger.debug("Headers : {}", headers.toString());
-        HttpEntity<MultiValueMap<String, Object>> entity = new HttpEntity<MultiValueMap<String, Object>>(sellssyCall,
-                this.headers);
+        HttpEntity<String> entity = new HttpEntity<String>(httpRequestAsString, this.headers);
         try {
             ResponseEntity<String> result = restTemplate.exchange(APIURI, HttpMethod.POST, entity, String.class);
             logger.debug("Result headers : {}", result.getHeaders().toString());
             logger.debug("Result body : {}", result.getBody());
 
-            // Process the answer
-            try {
-
-                Map<String, Object> rawResponse =  OBJECTMAPPER.readtrreadValue(result.getBody(),GENERICMAPTYPE);
-
-                if (!rawResponse.get("status").equals(SUCCESS))
-                    throw new SellsyApiException("Call to " + request.getMethod() + " : " + rawResponse.get("error"));
-                else {
-                    rawResponse.get(RESPONSE).getClass().in
-                    return new SellsyApiResponse(OBJECTMAPPER.readValues( rawResponse.get(RESPONSE), GENERICMAPTYPE);
-
-                }
-
-            } catch (IOException e) {
-                String errorMsg = "Exception " + e.toString() + " raised decoding Sellsy Api rawResponse"
-                        + result.getBody();
-                logger.error(errorMsg);
-                throw new SellsyApiException(errorMsg, e);
-            }
+            SellsyApiResponse rawResponse = new SellsyApiResponse(result.getBody());
+            if (!rawResponse.getResponseAttribute("status").equals(SUCCESS))
+                throw new SellsyApiException("Call to " + request.getMethod() + " : "
+                        + rawResponse.getResponseAttribute("error"));
+            else
+                return rawResponse.getAttributeValueAsResponse(RESPONSE);
         } catch (HttpClientErrorException e) {
             throw new SellsyApiException("Unable to connect to Sellsy server : " + e.getMessage(), e);
         }

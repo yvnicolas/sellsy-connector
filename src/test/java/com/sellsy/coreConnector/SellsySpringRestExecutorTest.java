@@ -124,7 +124,7 @@ public class SellsySpringRestExecutorTest {
         SellsyApiRequest request = new SellsyApiRequest("Peoples.getList", params);
         SellsyApiResponse result = underTest.process(request);
 
-        List<SellsyApiResponse> listContacts = SellsyApiResponseManip.extractResponseList(result);
+        List<SellsyApiResponse> listContacts = result.extractResponseList();
         logger.debug(String.format("Found %s results", listContacts.size()));
         assertEquals(8, listContacts.size());
         int i = 0;
@@ -145,7 +145,7 @@ public class SellsySpringRestExecutorTest {
         SellsyApiRequest request = new SellsyApiRequest("Peoples.getList", params);
         SellsyApiResponse result = underTest.process(request);
 
-        List<SellsyApiResponse> listContacts = SellsyApiResponseManip.extractResponseList(result);
+        List<SellsyApiResponse> listContacts = result.extractResponseList();
         logger.debug(String.format("Found %s results", listContacts.size()));
         int i = 0;
         for (SellsyApiResponse contact : listContacts) {

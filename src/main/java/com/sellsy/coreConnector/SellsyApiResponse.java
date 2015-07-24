@@ -48,6 +48,11 @@ public class SellsyApiResponse {
     protected SellsyApiResponse(JsonNode responseAsTree) {
         this.responseAsTree = responseAsTree;
     }
+    
+    public SellsyApiResponse getAttributeValueAsResponse(String attribute)throws SellsyApiException {
+        checkvoid();
+        return new SellsyApiResponse(responseAsTree.get(attribute));
+    }
 
     /**
      * Find the value of a complete attribute in the tree structure for the response. Example, to
@@ -56,7 +61,7 @@ public class SellsyApiResponse {
      * @param attribute
      * @return
      */
-    public Object getResponseAttribute(String attribute) {
+    public String getResponseAttribute(String attribute) {
         return attrvalue(attribute, responseAsTree);
     }
 
@@ -91,8 +96,7 @@ public class SellsyApiResponse {
 
     }
 
-
-    private Object attrvalue(String attribute, JsonNode jsonNode) {
+    private String attrvalue(String attribute, JsonNode jsonNode) {
 
         int firstDot = attribute.indexOf('.');
 
@@ -103,15 +107,14 @@ public class SellsyApiResponse {
                 return null;
             switch (current.getNodeType()) {
 
-            case BOOLEAN:
-                return current.asBoolean();
             case MISSING:
             case NULL:
                 return null;
             case STRING:
-                return current.asText();
+            case BOOLEAN:
             case NUMBER:
-                return current.asInt();
+                return current.asText();
+
             case OBJECT:
             case POJO:
                 logger.error("unexpected node value  : {}", current.toString());
@@ -157,7 +160,7 @@ public class SellsyApiResponse {
      */
     private void checkvoid() throws SellsyApiException {
         if (responseAsTree == null)
-            throw new SellsyApiException("Trying to extract Response List from a void sellsy Api response");
+            throw new SellsyApiException("Trying to extract data from a void sellsy Api response");
 
     }
 
@@ -172,6 +175,8 @@ public class SellsyApiResponse {
         checkvoid();
 
         JsonNode result = responseAsTree.get(SellsyAPIConstants.RESULT);
+        if (result == null)
+            throw new SellsyApiException(String.format("Response is not a list : %s", responseAsTree.toString()));
         List<SellsyApiResponse> toReturn = new ArrayList<>();
         Iterator<Entry<String, JsonNode>> index = result.fields();
         while (index.hasNext())

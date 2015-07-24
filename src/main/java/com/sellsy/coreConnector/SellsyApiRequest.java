@@ -5,6 +5,8 @@ package com.sellsy.coreConnector;
 
 import java.util.Map;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+
 /**
  * 
  * Low Level class to access Selssy Api
@@ -46,6 +48,23 @@ public class SellsyApiRequest {
 
     public void Object (Map<String, Object> params) {
         this.params = params;
+    }
+
+
+
+    @Override
+    public String toString() {
+        return "SellsyApiRequest [method=" + method + ", params=" + params + "]";
+    }
+
+
+
+    public String json() throws SellsyApiException {
+        try {
+            return SellsyAPIConstants.OBJECTMAPPER.writeValueAsString(this);
+        } catch (JsonProcessingException e) {
+            throw new SellsyApiException(String.format("Unable to process request %s:%s",this.toString(), e.toString()), e);
+        }
     }
 
   

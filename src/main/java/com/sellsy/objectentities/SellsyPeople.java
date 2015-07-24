@@ -3,6 +3,8 @@
  */
 package com.sellsy.objectentities;
 
+import com.sellsy.coreConnector.SellsyApiResponse;
+
 /**
  * @author Yves Nicolas
  *
@@ -23,6 +25,20 @@ public class SellsyPeople extends SellsyObject {
     public SellsyPeople() {
        
     }
+    
+    
+    public SellsyPeople(SellsyApiResponse apiResponse) {
+        super(apiResponse);
+        this.forename = this.getAttributeValue("forename");
+        this.name = this.getAttributeValue("name");
+        this.email = this.getAttributeValue("email");
+        this.tel = this.getAttributeValue("tel");
+        this.mobile = this.getAttributeValue("mobile");
+        this.position = this.getAttributeValue("position");
+        this.ownerfullname = this.getAttributeValue("ownerfullname");
+    }
+
+
     public String getForename() {
         return forename;
     }

@@ -8,7 +8,11 @@ public final class SellsyAPIConstants {
 
     protected static final ObjectMapper OBJECTMAPPER = new ObjectMapper();
     
-    protected static final String INFOS="infos";
-    protected static final String RESULT="result";
+    
+    // Attributes names reused several times in the API
+    public static final String INFOS="infos";
+    public static final String RESULT="result";
+    public static final String ID="id";
+    public static final String OWNERID="ownerid";
 
 }
