@@ -41,8 +41,6 @@ public class SellsySpringRestExecutorTest {
     private static SellsySpringRestExecutor underTest = new SellsySpringRestExecutor(consumerToken, consumerSecret,
             userToken, userSecret);
 
-    private static final ObjectMapper OBJECTMAPPER = new ObjectMapper();
-
     @Test
     public void test() throws SellsyApiException {
         ListGetParams params = new ListGetParams();
@@ -93,8 +91,7 @@ public class SellsySpringRestExecutorTest {
         SellsyApiRequest request = new SellsyApiRequest("Peoples.getList", params);
         SellsyApiResponse result = underTest.process(request);
 
-        SellsyResponseInfo infos = OBJECTMAPPER.convertValue(result.getResponseAttribute("infos"),
-                SellsyResponseInfo.class);
+        SellsyResponseInfo infos =result.getInfos();
         logger.debug("Result info : {}", infos.toString());
         logger.debug("Real result : {}", result.getResponseAttribute("result").toString());
         assertEquals(1, infos.getNbtotal());
@@ -109,10 +106,9 @@ public class SellsySpringRestExecutorTest {
         SellsyApiRequest request = new SellsyApiRequest("Peoples.getList", params);
         SellsyApiResponse result = underTest.process(request);
 
-        SellsyResponseInfo infos = OBJECTMAPPER.convertValue(result.getResponseAttribute("infos"),
-                SellsyResponseInfo.class);
+        SellsyResponseInfo infos =result.getInfos();
         logger.debug("Result info : {}", infos.toString());
-        logger.debug("Real result : {}", result.getResponseAttribute("result").toString());
+        logger.debug("Real result : {}", result.getResponseAttribute("result"));
         assertEquals(0, infos.getNbtotal());
     }
 
@@ -120,13 +116,13 @@ public class SellsySpringRestExecutorTest {
     public void testList() throws SellsyApiException {
         ListGetParams params = new ListGetParams();
         params.setPagination(new Pagination(10, 1));
-        params.setSearch(new SearchFilter("4921 05"));
+        params.setSearch(null);
         SellsyApiRequest request = new SellsyApiRequest("Peoples.getList", params);
         SellsyApiResponse result = underTest.process(request);
 
         List<SellsyApiResponse> listContacts = result.extractResponseList();
         logger.debug(String.format("Found %s results", listContacts.size()));
-        assertEquals(8, listContacts.size());
+        assertEquals(10, listContacts.size());
         int i = 0;
         for (SellsyApiResponse contact : listContacts) {
             i++;

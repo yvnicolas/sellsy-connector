@@ -116,9 +116,8 @@ public class SellsyApiResponse {
                 return current.asText();
 
             case OBJECT:
-            case POJO:
-                logger.error("unexpected node value  : {}", current.toString());
-                return null;
+            case POJO:               
+                return current.toString();
             default:
                 return null;
 
