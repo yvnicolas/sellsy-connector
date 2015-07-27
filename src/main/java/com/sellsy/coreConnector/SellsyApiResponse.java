@@ -95,6 +95,8 @@ public class SellsyApiResponse {
         return toReturn;
 
     }
+    
+    //TODO : this doesnot take into account array nodes. SHould put more thinking in that.
 
     private String attrvalue(String attribute, JsonNode jsonNode) {
 

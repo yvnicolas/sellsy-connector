@@ -87,7 +87,7 @@ public class SellsySpringRestExecutorTest {
     public void found1test() throws SellsyApiException {
         ListGetParams params = new ListGetParams();
         params.setPagination(new Pagination(10, 1));
-        params.setSearch(new SearchFilter("49 03 21 05"));
+        params.setSearch(new SearchFilter("06 98 01 73 10"));
         SellsyApiRequest request = new SellsyApiRequest("Peoples.getList", params);
         SellsyApiResponse result = underTest.process(request);
 
